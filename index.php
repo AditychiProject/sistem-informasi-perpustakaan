@@ -9,12 +9,29 @@ if (!$_SESSION['login']) {
 // File functions.php
 require 'inc/inc_functions.php';
 
-// Tampilkan semua data
-$books = querydata("SELECT * FROM books");
-// Jika tombol cari di-klik maka tampilkan data sesuai pencarian saja
-if (isset($_POST['search'])) {
+// konfigurasi
+$jmlDataPerHalaman = 2;
+// hitung jumlah data pada tabel
+$jmlData = count(querydata("SELECT * FROM books"));
+$jmlHalaman = ceil($jmlData / $jmlDataPerHalaman);
+// cek sedang di halaman berapa sekarang
+$halamanActive = (isset($_GET["page"])) ? $_GET["page"] : 1;
+$awalData = ($jmlDataPerHalaman * $halamanActive) - $jmlDataPerHalaman;
+
+
+
+
+$books = querydata("SELECT * FROM books LIMIT $awalData, $jmlDataPerHalaman");
+if (isset($_POST["cari"])) {
   $books = searchdata($_POST["keyword"]);
 }
+
+// Tampilkan semua data
+// $books = querydata("SELECT * FROM books");
+// // Jika tombol cari di-klik maka tampilkan data sesuai pencarian saja
+// if (isset($_POST['search'])) {
+//   $books = searchdata($_POST["keyword"]);
+// }
 
 ?>
 
@@ -62,10 +79,6 @@ if (isset($_POST['search'])) {
         <a href="logout.php" class="text-sm text-black font-semibold mx-6">Logout</a>
       </li>
     </ul>
-    <!-- Register Button -->
-    <a href="register.php" class="hidden lg:inline-block text-sm text-light font-medium bg-greencstm hover:bg-green-700 rounded-md lg:ml-auto lg:mr-4 px-8 py-3">Register</a>
-    <!-- Login Button -->
-    <a href="login.php" class="hidden lg:inline-block text-sm text-black font-medium border border-slate-400 hover:border-greencstm hover:ring-1 hover:ring-greencstm rounded-md px-8 py-3">Login</a>
   </nav>
   <!-- Navbar Mobile -->
   <div class="navbar-menu hidden relative z-50">
@@ -98,33 +111,39 @@ if (isset($_POST['search'])) {
           <!-- Search Bar -->
           <form action="" method="post" class="mb-4">
             <div class="flex justify-between gap-2">
-              <input type="text" name="keyword" class="w-full max-h-[44px] box-border text-sm text-black font-medium bg-light border border-slate-300 focus:border-greencstm rounded-md lg:ml-auto lg:mr-4 p-3">
-              <button type="submit" name="search" class="inline-block text-sm text-light bg-bluecstm hover:bg-blue-700 rounded-md px-4 py-3">Cari</button>
+              <input type="text" name="keyword" class="w-full h-full box-border text-sm text-black font-medium bg-light border border-slate-300 outline-bluecstm rounded-md lg:ml-auto lg:mr-4 p-3" placeholder="Cari data disini">
+              <button type="submit" name="search" class="inline-block text-sm text-light bg-bluecstm hover:bg-blue-700 rounded-md p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                </svg>
+              </button>
             </div>
           </form>
-          <!-- Register Button -->
-          <a href="register.php" class="block text-sm text-light text-center font-semibold bg-greencstm hover:bg-green-700 rounded-md mb-4 lg:mb-0 px-4 py-3">Register</a>
-          <!-- Login Button -->
-          <a href="login.php" class="block text-sm text-black text-center font-semibold border border-slate-400 hover:border-greencstm hover:ring-1 hover:ring-greencstm rounded-md mb-8 px-4 py-3">Login</a>
         </div>
       </div>
     </nav>
   </div>
   <!-- Dashboard Section -->
-  <div class="container ">
+  <div class="container">
     <div class="mx-auto">
+      <!-- Header -->
       <div class="pt-[64px] lg:pt-[96px] mb-6 ">
         <h2 class="text-3xl text-slate-800 font-bold mt-8 mb-10">Dashboard</h2>
         <div class="flex justify-between gap-2">
           <!-- Create Data Link -->
           <a href="create-data.php" class="inline-block text-sm text-light bg-bluecstm hover:bg-blue-700 rounded-md px-4 py-3">Tambah data buku</a>
           <!-- Search Bar -->
-          <form action="" method="post" class="hidden lg:inline-block">
-            <input type="text" name="keyword" class="hidden lg:inline-block w-64 max-h-[44px] box-border text-sm text-black font-medium bg-light border border-slate-300 focus:border-greencstm rounded-md lg:ml-auto lg:mr-4 p-3">
-            <button type="submit" name="search" class="inline-block text-sm text-light bg-bluecstm hover:bg-blue-700 rounded-md px-4 py-3">Cari</button>
+          <form action="" method="post" class="hidden lg:flex lg:items-center">
+            <input type="text" name="keyword" class="hidden lg:inline-block w-64 h-full text-sm text-black font-medium bg-light border border-slate-300 outline-bluecstm rounded-md lg:ml-auto lg:mr-4 p-3" placeholder="Cari data disini">
+            <button type="submit" name="search" class="inline-block h-full text-sm text-light bg-bluecstm hover:bg-blue-700 rounded-md p-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+              </svg>
+            </button>
           </form>
         </div>
       </div>
+      <!-- Table -->
       <div class="overflow-x-auto">
         <div class="inline-block min-w-full overflow-hidden border border-slate-300 rounded-lg">
           <table class="min-w-full leading-normal">
@@ -195,6 +214,49 @@ if (isset($_POST['search'])) {
             </tbody>
           </table>
         </div>
+      </div>
+      <!-- Paginate Link -->
+      <div class="flex justify-end gap-x-1 pb-[64px] lg:pb-[96px]">
+        <!-- Pre Button -->
+        <?php if ($halamanActive > 1) : ?>
+          <div class="w-[40px] h-[40px] text-black bg-light border border-slate-300 rounded-lg">
+            <a href="?page=<?php echo $halamanActive - 1; ?>" class="flex justify-center items-center w-full h-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+              </svg>
+            </a>
+          </div>
+        <?php endif; ?>
+        <!-- Center -->
+        <?php for ($i = 1; $i <= $jmlHalaman; $i++) : ?>
+          <?php if ($i == $halamanActive) : ?>
+            <!-- Paginate Active -->
+            <div class="w-[40px] h-[40px] text-light font-bold bg-bluecstm border border-bluecstm rounded-lg">
+              <a href="?page=<?php echo $i; ?>" class="flex justify-center items-center w-full h-full">
+                <?= $i; ?>
+              </a>
+            </div>
+          <?php else : ?>
+            <!-- Paginate Unactive -->
+            <div class="w-[40px] h-[40px] text-black bg-light border border-slate-300 rounded-lg">
+              <a href="?page=<?php echo $i; ?>" class="flex justify-center items-center w-full h-full">
+                <?= $i; ?>
+              </a>
+            </div>
+          <?php endif; ?>
+        <?php endfor; ?>
+        <!-- Next Button -->
+        <?php if ($halamanActive < $jmlHalaman) : ?>
+          <div class="w-[40px] h-[40px] text-black bg-light border border-slate-300 rounded-lg">
+            <a href="?page=<?php echo $halamanActive + 1; ?>" class="flex justify-center items-center w-full h-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708" />
+                <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708" />
+              </svg>
+            </a>
+          </div>
+        <?php endif; ?>
       </div>
     </div>
   </div>

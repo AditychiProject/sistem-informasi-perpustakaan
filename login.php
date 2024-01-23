@@ -4,6 +4,13 @@ session_start();
 // File functions.php
 require 'inc/inc_functions.php';
 
+// Jika sudah login maka jangan akses halaman login lagi
+if (isset($_SESSION['login'])) {
+	header('Location:index.php');
+	exit;
+}
+
+
 // Jika tombol login di-klik
 if (isset($_POST['login'])) {
 	$email =  $_POST['email'];

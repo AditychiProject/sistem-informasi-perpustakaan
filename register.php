@@ -1,13 +1,21 @@
 <?php
 session_start();
 
+// File functions.php
+require 'inc/inc_functions.php';
+
+// Jika sudah login maka jangan akses halaman register lagi
+if (isset($_SESSION['login'])) {
+	header('Location:index.php');
+	exit;
+}
+
 // Jika session tidak ada maka arahkan ke halaman login
 if (!$_SESSION['login']) {
 	header('Location:login.php');
 }
 
-// File functions.php
-require 'inc/inc_functions.php';
+
 
 // Jika tombol register di-klik
 if (isset($_POST['register'])) {
