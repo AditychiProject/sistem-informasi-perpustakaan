@@ -57,7 +57,7 @@ if (isset($_POST["cari"])) {
   <!-- Navbar Section -->
   <nav class="flex justify-between items-center w-full fixed bg-light p-4">
     <!-- Nav Brand -->
-    <a href="index.php" class="text-xl lg:text-2xl text-greencstm font-bold">
+    <a href="index.php" class="text-xl lg:text-2xl text-black font-bold">
       SI Perpustakaan
     </a>
     <!-- Hamburger Menu Button -->
