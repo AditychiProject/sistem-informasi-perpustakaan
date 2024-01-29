@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Hapus session
+// Hapus Session
 $_SESSION = [];
 session_destroy();
 session_unset();

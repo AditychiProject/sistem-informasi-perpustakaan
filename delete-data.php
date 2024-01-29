@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Jika session tidak ada maka arahkan ke halaman login
+// Jika session tidak ada maka arahkan ke halaman login.php
 if (!$_SESSION['login']) {
   header('Location:login.php');
 }
